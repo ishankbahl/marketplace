@@ -1,7 +1,7 @@
-export const TableHeader = [
+export const BidTableHeader = [
     'Price',
-    'USD',
+    'USD Price',
     'From'
 ];
 
-export const EditionsTableHeader = ['Edition', ...TableHeader];
+export const EditionsTableHeader = ['Edition', ...BidTableHeader, 'Top'];

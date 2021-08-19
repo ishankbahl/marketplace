@@ -16,6 +16,8 @@ export const GET_PROFILES = DOMAIN + '/api/v0/get-profiles';
 export const GET_SINGLE_PROFILE_INTERNAL = INTERNAL_DOMAIN + '/api/user/profile';
 export const GET_PROFILE_STATS = INTERNAL_DOMAIN + '/api/user/profile/stats';
 export const GET_NFT_DETAILS = INTERNAL_DOMAIN + '/api/nft/details';
+export const GET_NFT_BIDS = INTERNAL_DOMAIN + '/api/nft/bidders';
+export const GET_NFT_OWNERS = INTERNAL_DOMAIN + '/api/nft/owners';
 
 export const NavbarContentNames = {
     PROFILE: 'Profile',

@@ -127,11 +127,11 @@ export default function NavbarSearch() {
                                 className="inline h-6 w-6 rounded-full mr-1"
                                 src={GET_PROFILE_IMAGE + item.publicKey + PROFILE_IMAGE_FALLBACK}
                             />
-                            {item.userName}
-                            {!!item.coinPriceClout && <><div className="ml-2 inline">
+                            {item.userName.length > 12 ? item.userName.slice(0, 12) + '..' : item.userName}
+                            {!!item.coinPriceClout && <><div className="ml-1 inline">
                                 .
                             </div>
-                            <div className="ml-2 inline">
+                            <div className="ml-1 inline">
                                 ~{item.coinPriceClout} <CloutIcon />
                             </div></>}
                         </li>

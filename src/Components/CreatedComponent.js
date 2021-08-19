@@ -21,6 +21,7 @@ export default function Created(props) {
             return;
         }
         let isUnmounted = false;
+        const publickKey = props.publickKey;
         fetchUtil(GET_CREATED_NFTS, {
             method: 'POST',
             body: JSON.stringify({"userPublicKey": props.publicKey, "readerPublicKey": identityData.publicKeyAdded}),
@@ -30,7 +31,7 @@ export default function Created(props) {
           }, () => {
               //loader stuff
           }, (data) => {
-            if(isUnmounted) {
+            if(isUnmounted || publickKey !== props.publickKey) {
                 return;
             }
             const processedNfts = data.mintedNFTs.map(nft => {
@@ -61,7 +62,7 @@ export default function Created(props) {
             <div className="grid grid-cols-12 mt-4">
                 <div className="col-span-11">
                     <div className="flex justify-end">
-                        <Toggle className="float-right" setEnabled={toggleHandler} text="For sale" default={toggle} />
+                        <Toggle setEnabled={toggleHandler} text="For sale" default={toggle} />
                     </div>
                 </div>
             </div>

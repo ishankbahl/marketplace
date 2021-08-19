@@ -19,6 +19,7 @@ export default function Collected(props) {
             return;
         }
         let isUnmounted = false;
+        const publickKey = props.publickKey;
         fetchUtil(GET_USER_NFTS, {
             method: 'POST',
             body: JSON.stringify({"userPublicKey": props.publicKey}),
@@ -28,7 +29,7 @@ export default function Collected(props) {
           }, () => {
               //loader stuff
           }, (data) => {
-              if(isUnmounted) {
+              if(isUnmounted || publickKey !== props.publickKey) {
                   return;
               }
               const processedList = data.userNFTs.map(nft => {

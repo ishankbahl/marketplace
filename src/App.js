@@ -1,6 +1,6 @@
 import Navbar from './Components/NavbarComponent';
 import Banner from './Components/BannerComponent';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
 import React, { Suspense, lazy, useState, useEffect } from 'react';
 import { NAVBAR_DATA, GET_USERS_STATELESS, NavbarContentNames } from './Constants/Routes';
 import messageHandler, { sendInfoMessageToIframe } from './utils/identityUtil.js';
@@ -89,12 +89,15 @@ function App() {
               <Navbar tabs={NavbarTabs} changeUser={changeUser} showLoginModal={setLoginModalVisiblity} />
               <Suspense fallback={<div>Loading...</div>}>
                 <Switch>
-                  <Route exact path="/" component={Home} />
                   <Route path="/profile">
                     <Profile />
                     {/* : <LoginButton click={() => setLoginModalVisiblity(true)} /> } */}
                   </Route>
-                  <Route path="/discover"><NftDetails /></Route>
+                  <Route path="/discover">ihihi</Route>
+                  <Route path="/nft/:hash">
+                    <NftDetails />
+                  </Route>
+                  <Route exact path="/" component={Home} />
                 </Switch>
               </Suspense>
             </Router>
