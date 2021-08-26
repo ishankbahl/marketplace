@@ -1,22 +1,30 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import IconButton from '@material-ui/core/IconButton';
 import { HeartIcon as HeartIconSolid } from '@heroicons/react/solid';
-import { HeartIcon } from '@heroicons/react/outline';
+import { HeartIcon, XCircleIcon } from '@heroicons/react/outline';
 import fetchUtil from '../utils/fetchUtil';
 import { APPLICATION_JSON, CONTENT_TYPE } from '../Constants';
-import { AuthContext } from '../App';
+import { AuthContext, NotificationContext } from '../App';
 import { LIKE_POST } from '../Constants/Routes';
 import { signTransaction, submitTransaction } from '../utils/identityUtil';
 
 export default function LikeButton(props) {
     const [isLiked, setLikeStatus] = useState(props.isLiked);
+    const setNotifData = useContext(NotificationContext);
     const [count, setCount] = useState(props.count);
     const identityData = useContext(AuthContext);
 
-    const onLike = () => {
+    const onLike = (e) => {
+        e.stopPropagation();
         if(!identityData?.publicKeyAdded) {
-            //TODO: add notification for to login
+            setNotifData({
+                isVisible: true,
+                text: "Please Login to like",
+                heading: "Login",
+                icon: <XCircleIcon className="h-5 w-5 text-red-400" aria-hidden="true" />
+            });
+            setTimeout(() => setNotifData({isVisible: false}), 4000);
             return;
         }
         const IsUnlike = isLiked;
@@ -35,7 +43,17 @@ export default function LikeButton(props) {
             }
           }, () => {
               //loader stuff
-          }, ({ TransactionHex }) => {
+          }, ({ TransactionHex, error }) => {
+            if(error) {
+                setNotifData({
+                    isVisible: true,
+                    text: error,
+                    heading: "Like Action Failed",
+                    icon: <XCircleIcon className="h-5 w-5 text-red-400" aria-hidden="true" />
+                });
+                setTimeout(() => setNotifData({isVisible: false}), 4000);
+                return;
+            }
             signTransaction({
                   ...identityData.users[identityData.publicKeyAdded],
                   transactionHex: TransactionHex
@@ -43,9 +61,17 @@ export default function LikeButton(props) {
                 if(data.signedTransactionHex) {
                     submitTransaction(data.signedTransactionHex);
                 }
-            }).then(data => console.log(data));
+            })
           }, () => {/** failure code */});
     }
+
+    useEffect(() => {
+        setCount(props.count);
+    }, [props.count]);
+
+    useEffect(() => {
+        setLikeStatus(props.isLiked);
+    }, [props.isLiked]);
 
     return (
         <div className={isLiked ? "text-red-500" : ""}>

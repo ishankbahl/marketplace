@@ -1,54 +1,89 @@
-import React, { Suspense, useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { AuthContext, UsersContext } from '../App';
+import { AuthContext } from '../App';
 import ProfileHeader from './ProfileHeaderComponent';
 import Tabs from './TabsComponent';
-import { TABS_DATA, PROFILE_IMAGE_FALLBACK, GET_SINGLE_PROFILE_INTERNAL, GET_PROFILE_STATS } from '../Constants/Routes';
-import { BrowserRouter as Route, Switch, useHistory, useLocation, Link } from 'react-router-dom';
+import { TABS_DATA, GET_SINGLE_PROFILE_INTERNAL, GET_PROFILE_STATS, IS_USER_FOLLOWING } from '../Constants/Routes';
+import { Route, Switch, useHistory, useLocation } from 'react-router-dom';
 import cloneDeep from 'lodash.clonedeep';
-import { GET_PROFILE_IMAGE } from '../Constants/Routes';
 import Created from './CreatedComponent';
 import Collected from './CollectedComponent';
 import fetchUtil from '../utils/fetchUtil';
 import { CONTENT_TYPE, APPLICATION_JSON } from '../Constants';
 import CloutIcon from '../Icons/CloutIcon';
+import EmptyStateComponent from './EmptyStateComponent';
+import LoginButton from './LoginButton';
 
 export default function Profile(props) {
-    const usersData = useContext(UsersContext);
     const [tabs] = useState(cloneDeep(TABS_DATA));
     const [createdNfts, setCreatedNfts] = useState([]);
     const [collectedNfts, setCollectedNfts] = useState([]);
     const [publicKey, setPublicKey] = useState('');
     const location = useLocation();
+    const history = useHistory();
     const identityData = useContext(AuthContext);
-    const [profileData, setProfileData] = useState();
+    const [profileData, setProfileData] = useState({});
     const [profileStats, setProfileStats] = useState([]);
+    const [counts, setCounts] = useState({});
+    const [isFollowing, setFollowing] = useState();
 
     useEffect(() => {
-        let isUnmounted = false;
-        if(location.pathname[2] !== publicKey) {
-            const newKey = location.pathname.split('/')[2]
+        const newKey = location.pathname.split('/')[2];
+        if(newKey !== publicKey) {
             setPublicKey(newKey);
-        }
-        return () => {
-            isUnmounted = true;
         }
     }, [location.pathname]);
     
 
     useEffect(() => {
+        if(!profileData) {
+            setProfileData();
+        }
+        if(profileStats.length) {
+            setProfileStats([]);
+        }
+        if(createdNfts.length) {
+            setCreatedNfts([]);
+        }
+        if(collectedNfts.length) {
+            setCollectedNfts([]);
+        }
+        if(isFollowing) {
+            setFollowing();
+        }
         let isUnmounted = false;
+
+        if(location.pathname === "/profile/log-in" && identityData?.publicKeyAdded) {
+            history.push(`/profile/${identityData.publicKeyAdded}`);
+        }
 
         //replacing placeholder with key
         tabs.forEach((tab, index) => tab.href = TABS_DATA[index].href.replace(':publicKey', publicKey));
 
-        if(!publicKey) {
+        if(!publicKey || publicKey === 'log-in') {
             return;
+        }
+
+        if(identityData?.publicKeyAdded) {
+            fetchUtil(IS_USER_FOLLOWING, {
+                method: 'POST',
+                body: JSON.stringify({"publicKey": publicKey, "readerPublicKey": identityData?.publicKeyAdded}),
+                headers: {
+                    [CONTENT_TYPE]: APPLICATION_JSON
+                }
+            },() => {
+                //loader stuff
+            }, (data) => {
+                if(isUnmounted) {
+                    return;
+                }
+                setFollowing(data);
+            }, () => {/** failure code */});
         }
 
         fetchUtil(GET_SINGLE_PROFILE_INTERNAL, {
             method: 'POST',
-            body: JSON.stringify({"publicKey": publicKey, "readerPublicKey": identityData.publicKeyAdded}),
+            body: JSON.stringify({"publicKey": publicKey, "readerPublicKey": identityData?.publicKeyAdded}),
             headers: {
                 [CONTENT_TYPE]: APPLICATION_JSON
             }
@@ -62,7 +97,7 @@ export default function Profile(props) {
         }, () => {/** failure code */});
         fetchUtil(GET_PROFILE_STATS, {
             method: 'POST',
-            body: JSON.stringify({"publicKey": publicKey, "readerPublicKey": identityData.publicKeyAdded}),
+            body: JSON.stringify({"publicKey": publicKey, "readerPublicKey": identityData?.publicKeyAdded}),
             headers: {
                 [CONTENT_TYPE]: APPLICATION_JSON
             }
@@ -86,34 +121,60 @@ export default function Profile(props) {
                 value: <>{data.userCollectionValueClout} <CloutIcon size={20} /></>
             },
             {
-                name: 'mints value',
+                name: 'sold volume',
                 value: <>{data.mintedCollectionValueClout} <CloutIcon size={20} /></>
             }
         ]);
+        setCounts({
+            numCollected: data.numCollected,
+            numMinted: data.numMinted,
+        });
         }, () => {/** failure code */});
 
         return () => {
             isUnmounted = true;
         }
-    }, [publicKey]);
+    }, [publicKey, identityData?.publicKeyAdded]);
     
     return (
-        <>
-            <ProfileHeader profile={profileData} stats={profileStats} />
-            <Tabs tabs={tabs} />
-            <Suspense fallback={<div>Loading...</div>}>
-                <Switch>
-                    <Route exact path="/profile/:publicKey">
-                        <Collected nfts={collectedNfts} publicKey={publicKey} setNfts={setCollectedNfts} />
-                    </Route>
-                    <Route path="/profile/:publicKey/created">
-                        <Created nfts={createdNfts} setNfts={setCreatedNfts} publicKey={publicKey} />
-                    </Route>
-                    <Route path="/profile/:publicKey/my-bids">
-                        TBD
-                    </Route>
-                </Switch>
-            </Suspense>
-        </>
+        <div>
+            <Switch>
+                <Route path="/profile/log-in">
+                    <div className="m-10">
+                        <EmptyStateComponent content="You aren't logged in" icon={<LoginButton click={() => props.showLoginModal(true)} />} />
+                    </div>
+                </Route>
+                <Route path="/">
+                    <ProfileHeader profile={profileData} stats={profileStats} followStatus={isFollowing} />
+                    <div className="grid grid-cols-12 mt-4 border-b border-gray-200">
+                        <div className="col-start-2 col-span-10">
+                            <Tabs tabs={[{
+                                ...tabs[0],
+                                count: counts?.numCollected
+                            }, 
+                            {
+                                ...tabs[1],
+                                count: counts?.numMinted
+                            }]} />
+                        </div>
+                    </div>
+                    <Switch>
+                        <Route exact path="/profile/:publicKey">
+                            <Collected nfts={collectedNfts} publicKey={publicKey} setNfts={setCollectedNfts} />
+                        </Route>
+                        <Route path="/profile/:publicKey/created">
+                            <Created nfts={createdNfts} setNfts={setCreatedNfts} publicKey={publicKey} />
+                        </Route>
+                        <Route path="/profile/:publicKey/my-bids">
+                            TBD
+                        </Route>
+                    </Switch>
+                </Route>
+            </Switch>
+        </div>
     );
+}
+
+Profile.propTypes = {
+    showLoginModal: PropTypes.func.isRequired
 }

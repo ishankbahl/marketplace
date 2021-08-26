@@ -1,6 +1,6 @@
 import Modal from "./ModalComponent";
 import PropTypes from 'prop-types';
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { LoginIcon, CheckIcon } from "@heroicons/react/solid"
 import RadioList from "./RadioListComponent";
 import { login } from "../utils/identityUtil";

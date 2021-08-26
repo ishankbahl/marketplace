@@ -6,6 +6,9 @@ import fetchUtil from "../utils/fetchUtil";
 import { GET_CREATED_NFTS } from "../Constants/Routes";
 import { CONTENT_TYPE, APPLICATION_JSON } from "../Constants";
 import Toggle from './ToggleComponent';
+import EmptyStateComponent from "./EmptyStateComponent";
+import LoaderComponent from "./LoaderComponent";
+import { useLocation } from "react-router-dom";
 
 function filterNfts(nfts) {
     return nfts.filter(nft => nft.isForSale);
@@ -13,40 +16,48 @@ function filterNfts(nfts) {
 
 export default function Created(props) {
     const identityData = useContext(AuthContext);
-    const [nfts, setNfts] = useState([]);
-    const [toggle, setToggle] = useState(false); //only used for default
+    const [nfts, setNfts] = useState(props.nfts);
+    const [toggle, setToggle] = useState(false);
+    const [isLoading, setLoading] = useState(false);
+    const location = useLocation();
 
     useEffect(() => {
-        if(!props.publicKey) {
-            return;
-        }
         let isUnmounted = false;
-        const publickKey = props.publickKey;
+        const unmountedCallback = () => {
+            isUnmounted = true;
+        }
+        if(!isLoading) {
+            setLoading(true);
+        }
+        if(nfts.length && nfts[0].creatorPublicKey !== props.publicKey) {
+            setNfts([]);
+        }
+        //location check because component is rendered before props.publicKey changes
+        if(!props.publicKey || !location.pathname.includes(props.publicKey)) {
+            return unmountedCallback;
+        }
         fetchUtil(GET_CREATED_NFTS, {
             method: 'POST',
-            body: JSON.stringify({"userPublicKey": props.publicKey, "readerPublicKey": identityData.publicKeyAdded}),
+            body: JSON.stringify({"userPublicKey": props.publicKey, "readerPublicKey": identityData?.publicKeyAdded}),
             headers: {
               [CONTENT_TYPE]: APPLICATION_JSON
             }
-          }, () => {
-              //loader stuff
-          }, (data) => {
-            if(isUnmounted || publickKey !== props.publickKey) {
+          }, () => {}, (data) => {
+            if(isUnmounted) {
                 return;
             }
+            setLoading(false);
             const processedNfts = data.mintedNFTs.map(nft => {
                 nft.imageUrl = nft.imageUrls[0];
+                nft.fallbackUrl = nft.fallbackUrls[0];
                 nft.creatorPublicKey = props.publicKey;
                 return nft;
             });
             props.setNfts(processedNfts);
             setNfts(processedNfts);
-            setToggle(false);
           }, () => {/** failure code */});
-        return () => {
-            isUnmounted = true;
-        }
-    }, [props.publicKey]);
+        return unmountedCallback;
+    }, [props.publicKey, identityData?.publicKeyAdded]);
 
     const toggleHandler = (flag) => {
         if(flag) {
@@ -55,18 +66,29 @@ export default function Created(props) {
         else {
             setNfts(props.nfts);
         }
+        setToggle(flag);
     }
+
+    useEffect(() => {
+        toggleHandler(toggle);
+    }, [nfts.length]);
 
     return (
         <>
-            <div className="grid grid-cols-12 mt-4">
-                <div className="col-span-11">
-                    <div className="flex justify-end">
-                        <Toggle setEnabled={toggleHandler} text="For sale" default={toggle} />
-                    </div>
+            <div className="grid grid-cols-12 mt-10">
+                <div className="col-start-2 col-span-10">
+                    <Toggle setEnabled={toggleHandler} text="For sale" default={toggle} />
                 </div>
             </div>
-            <ProfileNftTiles nfts={nfts} />
+            {!!nfts.length && <ProfileNftTiles setNfts={setNfts} nfts={nfts} />}
+            {!nfts.length &&  !isLoading &&
+            <div className="m-10">
+                <EmptyStateComponent content="No NFTs to display" />
+            </div>}
+            {isLoading && !nfts.length &&
+            <div style={{ marginBottom: '2000px' }} className="flex justify-center my-10">
+                <LoaderComponent />
+            </div>}
         </>
     );
 }

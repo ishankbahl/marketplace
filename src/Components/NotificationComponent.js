@@ -1,13 +1,9 @@
-import { Fragment, useState } from 'react'
+import { Fragment } from 'react'
 import {PropTypes} from 'prop-types';
 import { Transition } from '@headlessui/react'
-import { CheckCircleIcon } from '@heroicons/react/outline'
 import { XIcon } from '@heroicons/react/solid'
 
 export default function Notification(props) {
-  const setShow = (flag) => {
-    props.how = flag;
-  }
 
   return (
     <>
@@ -42,7 +38,7 @@ export default function Notification(props) {
                     <button
                       className="bg-white rounded-md inline-flex text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                       onClick={() => {
-                        setShow(false)
+                        props.hide()
                       }}
                     >
                       <span className="sr-only">Close</span>

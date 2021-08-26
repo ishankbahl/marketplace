@@ -7,6 +7,7 @@ let iframe = null;
 let pendingRequests = [];
 let identityWindow = null;
 let hasInfoBeenSent = false;
+let customApprovalEvent = null;
 
 function respond(e, t, n) {
     e.postMessage(
@@ -54,6 +55,10 @@ export function submitTransaction(signedTransactionHex) {
       },
       body: JSON.stringify({TransactionHex: signedTransactionHex}),
   });
+}
+
+export function createNftBid() {
+
 }
 
 export function signTransaction(payload) {
@@ -117,13 +122,16 @@ export function logout (key) {
   identityWindow = window.open(`https://identity.bitclout.com/logout?publicKey=${key}`);
 }
 
-export function askApproval(TransactionHex) {
+export function askApproval(TransactionHex, customEvent) {
   identityWindow = window.open(`https://identity.bitclout.com/approve?tx=${TransactionHex}`);
+  if(customEvent) {
+    customApprovalEvent = customEvent;
+  }
 }
 
-export default(message, setIdentityData) => {
+export default function messageHandler(message, setIdentityData){
     const {
-      data: { method: method, payload: payload },
+      data: { method, payload },
     } = message;
   
     if (method === "initialize") {
@@ -133,7 +141,11 @@ export default(message, setIdentityData) => {
         setIdentityData(payload);
       }
       else {
-        submitTransaction(payload.signedTransactionHex);
+        submitTransaction(payload.signedTransactionHex).then(() => {
+          if(customApprovalEvent) {
+            window.dispatchEvent(customApprovalEvent);
+          }
+        });
       }
       handleLogin(payload);
       

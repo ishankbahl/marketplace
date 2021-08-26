@@ -16,7 +16,7 @@ export default function StatsCard(props) {
           <div className="relative">
             <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="max-w-4xl mx-auto">
-                <dl className="rounded-lg bg-white shadow-lg sm:grid md:grid-cols-4 xs:grid-cols-1">
+                <dl className="rounded-lg bg-white shadow-lg grid grid-cols-2 md:grid-cols-4">
                   {props.stats.map(stat => getBlock(stat))}
                 </dl>
               </div>

@@ -1,8 +1,8 @@
-import { Fragment, useState, useContext } from 'react'
+import { useState, useContext } from 'react'
 import PropTypes from 'prop-types';
-import { Disclosure, Menu, Transition } from '@headlessui/react'
-import { BellIcon, MenuIcon, XIcon, CogIcon } from '@heroicons/react/outline';
-import { NavLink } from 'react-router-dom';
+import { Disclosure } from '@headlessui/react'
+import { MenuIcon, XIcon } from '@heroicons/react/outline';
+import { NavLink, Link } from 'react-router-dom';
 import LoginButton from './LoginButton';
 import { AuthContext, UsersContext } from '../App';
 import { logout } from '../utils/identityUtil';
@@ -10,14 +10,14 @@ import SelectBox from './SelectBoxComponent';
 import { GET_PROFILE_IMAGE, PROFILE_IMAGE_FALLBACK } from '../Constants/Routes';
 import { LogoutIcon, UserAddIcon } from '@heroicons/react/outline';
 import NavbarSearch from './NavbarSearchComponent';
-import { SearchIcon } from '@heroicons/react/outline';
 
 function getOption(key, username) {
   return {
     key,
     appendElement: <img
-        className="h-8 w-8 rounded-full"
+        className="h-5 w-5 rounded-full"
         src={GET_PROFILE_IMAGE + key + PROFILE_IMAGE_FALLBACK}
+        alt="profile"
       />,
     content: username.length > 10 ? username.slice(0, 10) + '..' : username 
   }
@@ -35,12 +35,12 @@ export default function Navbar(props) {
   let options = [];
   let selected;
   if(identityData?.publicKeyAdded) {
-    options = Object.keys(identityData.users).map(key => getOption(key, usersData?.UserList[key]?.ProfileEntryResponse.Username || key));
+    options = Object.keys(identityData.users).map(key => getOption(key, usersData?.UserList[key]?.ProfileEntryResponse?.Username || key));
     selected = options.find(option => option.key === identityData.publicKeyAdded);
     options.push({
       key: 'add user',
-      appendElement: <UserAddIcon className="h-6 w-6 inline center" />,
-      content: <div className='block px-4 py-2 text-sm text-gray-700'>
+      appendElement: <UserAddIcon className="h-5 w-5 inline center" />,
+      content: <div className='block text-sm text-gray-700'>
          Add User
         </div>,
       onClick: () => props.showLoginModal(true),
@@ -49,8 +49,8 @@ export default function Navbar(props) {
 
     options.push({
       key: 'log out',
-      appendElement: <LogoutIcon className="h-6 w-6 inline center" />,
-      content: <div className='block px-4 py-2 text-sm text-gray-700'>
+      appendElement: <LogoutIcon className="h-5 w-5 inline center" />,
+      content: <div className='block text-sm text-gray-700'>
            Logout
         </div>,
       onClick: logoutCurrentAccount,
@@ -96,7 +96,7 @@ export default function Navbar(props) {
           <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8">
             <div className="flex justify-between h-16">
               <div className="flex px-2 lg:px-0">
-                <div className="flex-shrink-0 flex items-center">
+                <Link to="/" className="flex-shrink-0 flex items-center">
                   <img
                     className="block lg:hidden h-8 w-auto"
                     src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
@@ -107,30 +107,13 @@ export default function Navbar(props) {
                     src="https://tailwindui.com/img/logos/workflow-logo-indigo-600-mark-gray-800-text.svg"
                     alt="Workflow"
                   />
-                </div>
+                </Link>
                 <div className="hidden lg:ml-6 lg:flex lg:space-x-8">
                   {/* Current: "border-indigo-500 text-gray-900", Default: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700" */}
                   {props.tabs.map(tab => getTab(tab))}
                 </div>
               </div>
               <div className="flex-1 flex items-center justify-center px-2 lg:ml-6 lg:justify-end">
-                {/* <div className="max-w-lg w-full lg:max-w-xs">
-                  <label htmlFor="search-marketplace" className="sr-only">
-                    Search
-                  </label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <SearchIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
-                    </div>
-                    <input
-                      id="search-marketplace"
-                      name="search-marketplace"
-                      className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                      placeholder="Search"
-                      type="search"
-                    />
-                  </div>
-                </div> */}
                 <NavbarSearch />
               </div>
               <div className="flex items-center lg:hidden">
@@ -156,7 +139,7 @@ export default function Navbar(props) {
               {/* Current: "bg-indigo-50 border-indigo-500 text-indigo-700", Default: "border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800" */}
               {props.tabs.map(tab => getSmallTab(tab))}
             </div>
-            <div className="pt-4 pb-3 border-t border-gray-200">
+            <div className="py-2 border-t border-gray-200">
               {!identityData?.publicKeyAdded ? <LoginButton click={() => props.showLoginModal(true)} /> : <>
               <div className="flex items-center px-4">
                 <SelectBox options={options} selected={selected} onChange={onUserChange} />

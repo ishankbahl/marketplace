@@ -1,6 +1,10 @@
+import createBreakpoints from "@material-ui/core/styles/createBreakpoints";
+
 export const BITCLOUT_DOMAIN = 'https://bitclout.com';
-export const DOMAIN = 'https://api.tijn.club';
-export const INTERNAL_DOMAIN = 'http://45.77.52.104:3001';
+export const DOMAIN = 'https://tijn.club';
+// export const INTERNAL_DOMAIN = 'http://45.77.52.104:3001';
+export const INTERNAL_DOMAIN = 'https://api.oble.io/int';
+export const CLOUDFLARE_DOMAIN = 'https://clout-help.tools.workers.dev';
 
 export const GET_PROFILE_IMAGE = BITCLOUT_DOMAIN + '/api/v0/get-single-profile-picture/';
 export const PROFILE_IMAGE_FALLBACK = '?fallback=https://bitclout.com/assets/img/default_profile_pic.png';
@@ -18,6 +22,12 @@ export const GET_PROFILE_STATS = INTERNAL_DOMAIN + '/api/user/profile/stats';
 export const GET_NFT_DETAILS = INTERNAL_DOMAIN + '/api/nft/details';
 export const GET_NFT_BIDS = INTERNAL_DOMAIN + '/api/nft/bidders';
 export const GET_NFT_OWNERS = INTERNAL_DOMAIN + '/api/nft/owners';
+export const GET_SHOWCASE_NFTS = INTERNAL_DOMAIN + '/api/nft/showcase';
+export const GET_READER_STATE = INTERNAL_DOMAIN + '/api/nft/user/like-diamonds';
+export const CREATE_NFT_BID = DOMAIN + '/api/v0/create-nft-bid';
+export const CREATE_FOLLOW_TRANSACTION = DOMAIN + '/api/v0/create-follow-txn-stateless';
+export const GET_FEATURED_ARTISTS = CLOUDFLARE_DOMAIN + '/api/showcase/featured-artists';
+export const IS_USER_FOLLOWING = INTERNAL_DOMAIN + '/api/user/is-following';
 
 export const NavbarContentNames = {
     PROFILE: 'Profile',
@@ -26,17 +36,16 @@ export const NavbarContentNames = {
 
 export const NAVBAR_DATA = [
     {
-        content: 'Profile',
-        route: '/profile'
-    },
-    {
         content: 'Discover',
         route: '/discover'
+    },
+    {
+        content: 'Profile',
+        route: '/profile'
     }
 ];
 
 export const TABS_DATA = [
     { name: 'Collected', href: '/profile/:publicKey' },
     { name: 'Created', href: '/profile/:publicKey/created' },
-    { name: 'My Bids', href: '/profile/:publicKey/my-bids' },
 ];

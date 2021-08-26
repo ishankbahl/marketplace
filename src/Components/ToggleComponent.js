@@ -18,7 +18,7 @@ export default function Toggle(props) {
   }, [props.default]);
 
   return (
-    <Switch.Group as="div" className="flex items-center">
+    <Switch.Group as="div" className="flex items-center max-w-7xl mx-auto">
       <Switch
         checked={enabled}
         onChange={setEnabledWrapper}

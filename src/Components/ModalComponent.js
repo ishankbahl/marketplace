@@ -39,7 +39,7 @@ export default function Modal(props) {
                 <button
                   type="button"
                   className="bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                  onClick={() => props.showLoginModal(false)}
+                  onClick={() => props.showModal(false)}
                 >
                   <span className="sr-only">Close</span>
                   <XIcon className="h-5 w-5" aria-hidden="true" />
@@ -48,9 +48,9 @@ export default function Modal(props) {
               <div>
                   {props.content}
               </div>
-              <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
+              {props.actionButtons && <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
                 {props.actionButtons}
-              </div>
+              </div>}
             </div>
           </Transition.Child>
         </div>
@@ -62,5 +62,6 @@ export default function Modal(props) {
 Modal.propTypes = {
     content: PropTypes.element.isRequired,
     actionButtons: PropTypes.element,
-    showClose: PropTypes.bool
+    show: PropTypes.bool,
+    showModal: PropTypes.func,
 }
