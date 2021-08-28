@@ -13,11 +13,13 @@ import { CONTENT_TYPE, APPLICATION_JSON } from '../Constants';
 import CloutIcon from '../Icons/CloutIcon';
 import EmptyStateComponent from './EmptyStateComponent';
 import LoginButton from './LoginButton';
+import Bids from './BidsComponent';
 
 export default function Profile(props) {
     const [tabs] = useState(cloneDeep(TABS_DATA));
     const [createdNfts, setCreatedNfts] = useState([]);
     const [collectedNfts, setCollectedNfts] = useState([]);
+    const [bids, setBids] = useState([]);
     const [publicKey, setPublicKey] = useState('');
     const location = useLocation();
     const history = useHistory();
@@ -128,6 +130,7 @@ export default function Profile(props) {
         setCounts({
             numCollected: data.numCollected,
             numMinted: data.numMinted,
+            numUserBids: data.numUserBids
         });
         }, () => {/** failure code */});
 
@@ -145,7 +148,7 @@ export default function Profile(props) {
                     </div>
                 </Route>
                 <Route path="/">
-                    <ProfileHeader profile={profileData} stats={profileStats} followStatus={isFollowing} />
+                    <ProfileHeader profile={profileData} stats={profileStats} followStatus={isFollowing && (!identityData?.publicKeyAdded || identityData?.publicKeyAdded !== publicKey)} />
                     <div className="grid grid-cols-12 mt-4 border-b border-gray-200">
                         <div className="col-start-2 col-span-10">
                             <Tabs tabs={[{
@@ -155,6 +158,10 @@ export default function Profile(props) {
                             {
                                 ...tabs[1],
                                 count: counts?.numMinted
+                            },
+                            {
+                                ...tabs[2],
+                                count: counts?.numUserBids
                             }]} />
                         </div>
                     </div>
@@ -165,8 +172,8 @@ export default function Profile(props) {
                         <Route path="/profile/:publicKey/created">
                             <Created nfts={createdNfts} setNfts={setCreatedNfts} publicKey={publicKey} />
                         </Route>
-                        <Route path="/profile/:publicKey/my-bids">
-                            TBD
+                        <Route path="/profile/:publicKey/bids">
+                            <Bids bids={bids} setBids={setBids} publicKey={publicKey} />
                         </Route>
                     </Switch>
                 </Route>

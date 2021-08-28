@@ -6,7 +6,7 @@ export default function Table(props) {
             <th
                 scope="col"
                 key={cell}
-                className="px-1 py-1 sm:px-3 sm:py-3 sm:text-sm text-left text-xs font-medium text-gray-500 tracking-normal"
+                className="px-3 py-3 text-sm whitespace-nowrap text-left font-medium text-gray-500 tracking-normal"
             >
                 {cell}
             </th>
@@ -21,7 +21,7 @@ export default function Table(props) {
 
     const getTd = (cell) => {
         return (
-            <td key={cell.key} className="px-1 py-1 sm:px-3 sm:py-3 text-xs sm:text-sm">{cell.content}</td>
+            <td key={cell.key} className="whitespace-nowrap px-3 py-3 text-sm">{cell.content}</td>
         );
     }
 

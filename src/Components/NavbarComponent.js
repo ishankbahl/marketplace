@@ -10,6 +10,8 @@ import SelectBox from './SelectBoxComponent';
 import { GET_PROFILE_IMAGE, PROFILE_IMAGE_FALLBACK } from '../Constants/Routes';
 import { LogoutIcon, UserAddIcon } from '@heroicons/react/outline';
 import NavbarSearch from './NavbarSearchComponent';
+import Logo from '../assets/logo.jpg';
+import MobileLogo from '../assets/logo-mobile.jpg';
 
 function getOption(key, username) {
   return {
@@ -99,12 +101,12 @@ export default function Navbar(props) {
                 <Link to="/" className="flex-shrink-0 flex items-center">
                   <img
                     className="block lg:hidden h-8 w-auto"
-                    src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
+                    src={MobileLogo}
                     alt="Workflow"
                   />
                   <img
                     className="hidden lg:block h-8 w-auto"
-                    src="https://tailwindui.com/img/logos/workflow-logo-indigo-600-mark-gray-800-text.svg"
+                    src={Logo}
                     alt="Workflow"
                   />
                 </Link>
@@ -140,10 +142,11 @@ export default function Navbar(props) {
               {props.tabs.map(tab => getSmallTab(tab))}
             </div>
             <div className="py-2 border-t border-gray-200">
-              {!identityData?.publicKeyAdded ? <LoginButton click={() => props.showLoginModal(true)} /> : <>
               <div className="flex items-center px-4">
-                <SelectBox options={options} selected={selected} onChange={onUserChange} />
-              </div></>}
+                {!identityData?.publicKeyAdded ? <LoginButton click={() => props.showLoginModal(true)} /> : 
+                  <SelectBox options={options} selected={selected} onChange={onUserChange} />
+                }
+              </div>
             </div>
           </Disclosure.Panel>
         </>

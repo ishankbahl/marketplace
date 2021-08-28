@@ -16,6 +16,7 @@ import LoaderComponent from './Components/LoaderComponent';
 import Home from './Components/HomeComponent';
 import ErrorBoundary from './Components/ErrorBoundaryComponent';
 import ScrollToTop from './Components/ScrollToTopComponent';
+import Trends from './Components/TrendsComponent';
 
 const Profile = lazy(() => import('./Components/ProfileComponent'));
 const NftDetails = lazy(() => import('./Components/NftDetailComponent'));
@@ -108,6 +109,9 @@ function App() {
                       </Route>
                       <Route path="/nft/:hash">
                         <NftDetails />
+                      </Route>
+                      <Route path="/trends">
+                        <Trends />
                       </Route>
                       <Route exact path="/">
                         <Home />

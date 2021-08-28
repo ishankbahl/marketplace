@@ -28,6 +28,8 @@ export const CREATE_NFT_BID = DOMAIN + '/api/v0/create-nft-bid';
 export const CREATE_FOLLOW_TRANSACTION = DOMAIN + '/api/v0/create-follow-txn-stateless';
 export const GET_FEATURED_ARTISTS = CLOUDFLARE_DOMAIN + '/api/showcase/featured-artists';
 export const IS_USER_FOLLOWING = INTERNAL_DOMAIN + '/api/user/is-following';
+export const GET_USER_BIDS = INTERNAL_DOMAIN + '/api/nft/user/bids';
+export const GET_TRENDS = CLOUDFLARE_DOMAIN + '/api/trends';
 
 export const NavbarContentNames = {
     PROFILE: 'Profile',
@@ -42,10 +44,15 @@ export const NAVBAR_DATA = [
     {
         content: 'Profile',
         route: '/profile'
+    },
+    {
+        content: 'Trends',
+        route: '/trends'
     }
 ];
 
 export const TABS_DATA = [
     { name: 'Collected', href: '/profile/:publicKey' },
     { name: 'Created', href: '/profile/:publicKey/created' },
+    { name: 'Bids', href: '/profile/:publicKey/bids' }
 ];

@@ -25,6 +25,14 @@ export default function HomeHero() {
                                 Discover
                             </Link>
                         </div>
+                        <div className="mt-3 sm:mt-0 sm:ml-3">
+                            <Link
+                                to="/trends"
+                                className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 md:py-4 md:text-lg md:px-10"
+                            >
+                                Trends
+                            </Link>
+                        </div>
                     </div>
                     <p className="text-indigo-600 hover:text-indigo-900 cursor-pointer mt-3 mb-3" onClick={() => showModal(true)}>Get featured on the homepage</p>
                     <GetFeaturedModal show={show} showModal={showModal} />

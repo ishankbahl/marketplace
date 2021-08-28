@@ -19,7 +19,7 @@ export default function Tabs(props) {
                         to={tab.href}
                         exact
                         activeClassName='border-indigo-500 text-gray-900'
-                        className={`${ currentRoute !== tab.href && 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'} whitespace-nowrap py-4 px-1 border-b-2 font-medium text-lg`}
+                        className={`${ currentRoute !== tab.href && 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'} whitespace-nowrap py-4 px-1 border-b-2 font-medium text-xs sm:text-lg`}
                         aria-current={tab.current ? 'page' : undefined}
                     >
                         {tab.name}
@@ -27,7 +27,7 @@ export default function Tabs(props) {
                         <span
                             className={classNames(
                             tab.current ? 'bg-indigo-100 text-indigo-600' : 'bg-gray-100 text-gray-900',
-                            'ml-3 py-0.5 px-2.5 rounded-full text-xs font-medium md:inline-block'
+                            'ml-1 py-0.5 px-1 rounded-full text-xs font-medium md:inline-block'
                             )}
                         >
                             {tab.count}

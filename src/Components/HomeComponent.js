@@ -4,6 +4,7 @@ import HomeCollection from './HomeCollectionComponent';
 import AppScreenshotSection from './AppScreenshotSectionComponent';
 import CtaSection from './CtaSectionComponent';
 import FEATURED_ARTISTS_HOME from '../Constants/FeaturedArtistsHomeContants';
+import sections from '../Constants/AppScreenshotConstants';
 
 export default function Home() {
     return (
@@ -11,7 +12,10 @@ export default function Home() {
             <HomeHero />
             <div className="grid grid-cols-12">
                 <div className="col-span-12">
-                    <AppScreenshotSection />
+                    <AppScreenshotSection {...sections[0]} />
+                </div>
+                <div className="col-span-12">
+                    <AppScreenshotSection {...sections[1]} />
                 </div>
             </div>
             <div className="grid grid-cols-12 bg-gray-50">

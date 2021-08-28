@@ -274,10 +274,10 @@ export default function NftDetail() {
                   </li>
               </ul>
             </div>
-            <div className="lg:col-span-2 lg:pr-8 my-10">
+            <div className="lg:col-span-2 lg:pr-8 my-5">
               <CollapsibleTable actionButton={nft?.onSaleEditions.length ? AddBidButton : <></>} zerRowsMessage="No active bids" tableHeading={<><ViewListIcon className="h-5 w-5 inline pb-1" />Bids</>} header={(nft.editionsForSale > 1) ? EditionsTableHeader : BidTableHeader } rows={bids} />
             </div>
-            <div className="lg:col-span-2 lg:pr-8 my-10">
+            <div className="lg:col-span-2 lg:pr-8 mb-5">
               <CollapsibleTable zerRowsMessage="No owners" tableHeading={<><UsersIcon className="h-5 w-5 inline pb-1" />Owned by</>} rows={owners} />
             </div>
         </div>

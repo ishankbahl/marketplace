@@ -5,3 +5,12 @@ export const BidTableHeader = [
 ];
 
 export const EditionsTableHeader = ['Edition', ...BidTableHeader, 'Top'];
+
+export const ProfileEditionsTabHeader = [
+    'Edition',
+    'Item',
+    'Price',
+    'USD Price',
+    'Creator',
+    'Top Bid'
+];

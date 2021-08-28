@@ -1,4 +1,3 @@
-import appScreenShot from '../assets/appScreenShot.jpg';
 import { LazyLoadImage, trackWindowScroll } from 'react-lazy-load-image-component';
 
 function AppScreenshotSection(props) {
@@ -7,16 +6,16 @@ function AppScreenshotSection(props) {
             <div className="mx-auto max-w-md px-4 text-center sm:px-6 sm:max-w-3xl lg:px-8 lg:max-w-7xl">
               <div>
                 <p className="mt-2 text-3xl font-extrabold text-gray-900 tracking-tight sm:text-4xl">
-                    Viewing NFTs made easy
+                    {props.heading}
                 </p>
                 <p className="mt-5 max-w-prose mx-auto text-xl text-gray-500">
-                    Browse any user's NFTs with a simple viewing experience on both mobile and desktop.
+                    {props.text}
                 </p>
               </div>
               <div className="mt-12">
                 <LazyLoadImage 
                     className="rounded-lg shadow-xl ring-1 ring-black ring-opacity-5"
-                    src={appScreenShot}
+                    src={props.src}
                     alt="app screenshot"
                     scrollPosition={props.scrollPosition}
                     threshold={100}
