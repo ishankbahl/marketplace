@@ -1,8 +1,5 @@
-import createBreakpoints from "@material-ui/core/styles/createBreakpoints";
-
 export const BITCLOUT_DOMAIN = 'https://bitclout.com';
 export const DOMAIN = 'https://tijn.club';
-// export const INTERNAL_DOMAIN = 'http://45.77.52.104:3001';
 export const INTERNAL_DOMAIN = 'https://api.oble.io/int';
 export const CLOUDFLARE_DOMAIN = 'https://clout-help.tools.workers.dev';
 

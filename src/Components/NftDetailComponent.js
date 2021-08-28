@@ -3,7 +3,7 @@ import { PROFILE_IMAGE_FALLBACK, GET_PROFILE_IMAGE, GET_NFT_BIDS, GET_NFT_OWNERS
 import DiamondButton from './DiamondButtonComponent'
 import LikeButton from './LikeButtonComponent'
 import CloutIcon from '../Icons/CloutIcon'
-import { Tooltip, IconButton } from '@material-ui/core'
+import { Tooltip } from '@material-ui/core'
 import PropTypes from 'prop-types';
 import { useEffect, useState, useContext } from 'react'
 import { useLocation, useHistory } from 'react-router-dom'
